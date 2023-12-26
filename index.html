@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Modern Quote Poster</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        box-sizing: border-box;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      #random-quote {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      #random-quote-text {
+        margin-top: 15px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Post a Quote</h1>
+      <form id="quote-form">
+        <input type="text" id="text" placeholder="Enter quote text" required />
+        <input type="text" id="author" placeholder="Enter author" required />
+        <button type="submit">Post Quote</button>
+      </form>
+
+      <div id="random-quote">
+        <button id="fetch-random">Fetch Random Quote</button>
+        <p id="random-quote-text"></p>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("quote-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          var text = document.getElementById("text").value;
+          var author = document.getElementById("author").value;
+
+          fetch("https://late-amaranth.cmd.outerbase.io/quotes", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text: text, author: author }),
+          })
+            .then((response) => response.json())
+            .then((data) => alert("Quote Posted!"))
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        });
+
+      document
+        .getElementById("fetch-random")
+        .addEventListener("click", function () {
+          fetch("https://late-amaranth.cmd.outerbase.io/quotes/random")
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById(
+                "random-quote-text"
+              ).innerText = `"${data.text}" - ${data.author}`;
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        });
+    </script>
+  </body>
+</html>
